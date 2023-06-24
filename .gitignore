@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+cmake
+batch_files
+_tests
