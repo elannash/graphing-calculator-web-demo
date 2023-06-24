@@ -34,4 +34,4 @@
 cmake
 batch_files
 _tests
-CMakeLists
+CMakeLists.txt
