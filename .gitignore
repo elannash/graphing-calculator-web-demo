@@ -35,3 +35,4 @@ cmake
 batch_files
 _tests
 CMakeLists.txt
+.DS_Store
