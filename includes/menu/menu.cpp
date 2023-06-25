@@ -27,7 +27,7 @@ Menu::Menu(sf::Vector2f position, float width, float height) : _open(false), _po
     _rect.setOutlineThickness(2);
     _rect.setOutlineColor(sf::Color(153, 153, 153));
 
-    if (!font.loadFromFile("Calibri Regular.ttf"))
+    if (!font.loadFromFile("Calibri_Regular.ttf"))
     {
         cout << "Menu() CTOR: Font failed to load" << endl;
         cin.get();

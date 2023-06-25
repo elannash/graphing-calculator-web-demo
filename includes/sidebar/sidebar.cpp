@@ -20,7 +20,7 @@ Sidebar::Sidebar(float left, float width) : _left(left), _width(width)
     // check projects->run->working directory
     //      [Make sure it's not pointing to the app file]
 
-    if (!font.loadFromFile("Calibri Regular.ttf"))
+    if (!font.loadFromFile("Calibri_Regular.ttf"))
     {
         cout << "Sidebar() CTOR: Font failed to load" << endl;
         cin.get();

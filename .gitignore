@@ -36,3 +36,6 @@ batch_files
 _tests
 CMakeLists.txt
 .DS_Store
+_tests
+.vscode
+batch_files

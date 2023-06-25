@@ -54,7 +54,7 @@ animate::animate() : sidebar(WORK_PANEL, SIDE_BAR), system(_graph_info), command
 
     cout << "Animate CTOR. preparing to load the font." << endl;
 
-    if (!font.loadFromFile("../Calibri Regular.ttf"))
+    if (!font.loadFromFile("Calibri_Regular.ttf"))
     {
         cout << "Animate() CTOR: Font failed to load" << endl;
         cin.get();
@@ -73,7 +73,7 @@ animate::animate() : sidebar(WORK_PANEL, SIDE_BAR), system(_graph_info), command
     function_input_label.setFillColor(sf::Color::Black);
     function_input_label.setPosition(sf::Vector2f(WORK_PANEL - function_input_label.getLocalBounds().width - 10, SCREEN_HEIGHT - function_input_label.getCharacterSize() - 10));
 
-    function_label = sf::Text("asldfjkla;sdk", font);
+    function_label = sf::Text("", font);
     function_label.setCharacterSize(20);
     function_label.setStyle(sf::Text::Bold);
     function_label.setFillColor(sf::Color::Black);
