@@ -39,4 +39,3 @@ CMakeLists.txt
 _tests
 .vscode
 batch_files
-build
