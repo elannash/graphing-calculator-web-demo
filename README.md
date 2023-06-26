@@ -28,7 +28,6 @@ A fun little project built with the help of **[SFML Version 2.5.1](https://www.s
 
 Prior to installation, ensure that you have downloaded **[SFML Version 2.5.1](https://www.sfml-dev.org/download/sfml/2.5.1/)**. In the provided makefile, modify the variables ``PATH_TO_SFML_HEADERS`` and ``PATH_TO_SFML_LIBS`` to accurately reflect the location of SFML headers and libraries on your system. Then, execute the following commands from the project's root directory to compile:
 
-- If compiling on Windows, comment out ``line 22`` of the Makefile and uncomment ``line 23``.
 - Run ``make``
 - Change directory to ``build`` using the command ``cd build``
 - Launch the executable ``main`` by executing ``./main``

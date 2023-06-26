@@ -15,15 +15,7 @@ EXEC = $(BIN_DIR)/main
 
 all: $(EXEC)
 
-$(EXEC): build
+$(EXEC): 
 	$(CXX) $(CXXFLAGS) $(LINKER_FLAGS) -o $(EXEC) $(SRCS) 
 
-build:
-	@mkdir -p $(BIN_DIR)
-#	@mkdir $(BIN_DIR)
-
-clean:
-	rm -rf $(BIN_DIR)/main*
-#	rmdir /s /q $(BIN_DIR)/main*
-
-.PHONY: all build clean
+.PHONY: all
