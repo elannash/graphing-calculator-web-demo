@@ -24,5 +24,6 @@ build:
 
 clean:
 	rm -rf $(BIN_DIR)/main*
+#	rmdir /s /q $(BIN_DIR)/main*
 
 .PHONY: all build clean
