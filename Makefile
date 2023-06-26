@@ -16,6 +16,6 @@ EXEC = $(BIN_DIR)/main
 all: $(EXEC)
 
 $(EXEC): 
-	$(CXX) $(CXXFLAGS) $(LINKER_FLAGS) -o $(EXEC) $(SRCS) 
+	$(CXX) $(CXXFLAGS) -o $(EXEC) $(SRCS) $(LINKER_FLAGS) 
 
 .PHONY: all
