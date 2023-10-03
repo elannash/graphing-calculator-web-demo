@@ -2,10 +2,10 @@
 A fun little project built with the help of **[SFML Version 2.5.1](https://www.sfml-dev.org/download/sfml/2.5.1/)**.
 
 ## Features
-  - Sidebar: Store and save functions for easy access.
-  - Zoom: Zoom in and out of the graph using the scroll wheel.
-  - Pan: Navigate the graph using arrow keys.
-  - User Input: Enter your own custom functions to analyze.
+  - Sidebar: Store and save functions for easy access
+  - Zoom: Zoom in and out of the graph using the scroll wheel
+  - Pan: Navigate the graph using arrow keys
+  - User Input: Enter your own custom functions to analyze
 
 |<img src="media/sidebar.gif" width="382" height="220"/>|<img src="media/zoom.gif" width="382" height="220"/>|
 |---|---|
