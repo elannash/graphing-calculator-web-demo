@@ -33,7 +33,7 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         ticks: {
           color: "#a5c5d6",
           font: {
-            family: "'Manifold', sans-serif", // Updated to Manifold font
+            family: "'Manifold', sans-serif",
             size: 12,
           },
         },
@@ -51,7 +51,7 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         ticks: {
           color: "#a5c5d6",
           font: {
-            family: "'Manifold', sans-serif", // Updated to Manifold font
+            family: "'Manifold', sans-serif",
             size: 12,
           },
         },
@@ -118,18 +118,15 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         height: "100vh",
         backgroundColor: "#061326",
         color: "#A2C0D2",
-        fontFamily: "'Manifold', sans-serif", // Updated to Manifold font
+        fontFamily: "'Manifold', sans-serif",
         textShadow: "0 0 3px #A2C0D2",
         border: "2px solid #A2C0D2",
         overflow: "hidden",
         imageRendering: "pixelated",
-        boxShadow: "0 0 5px rgba(162, 192, 210, 0.3)", // Reduced intensity for the shadow
+        boxShadow: "0 0 5px rgba(162, 192, 210, 0.3)",
       }}
     >
-      {/* Add the graph */}
       <Line data={data} options={options} />
-
-      {/* Add a pixel grid overlay */}
       <div
         style={{
           position: "absolute",
@@ -154,7 +151,6 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         }}
       />
 
-      {/* Add a subtle vignette effect with less intensity */}
       <div
         style={{
           position: "absolute",
@@ -163,7 +159,7 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
           width: "100%",
           height: "100%",
           pointerEvents: "none",
-          background: "radial-gradient(circle, transparent 95%, #061326 100%)", // More transparent vignette
+          background: "radial-gradient(circle, transparent 90%, #061326 100%)",
           mixBlendMode: "multiply",
         }}
       />

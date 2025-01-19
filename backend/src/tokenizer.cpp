@@ -98,7 +98,7 @@ void Tokenizer::finalize_token(const std::string &token_str, Queue<Token *> &q)
     }
     else
     {
-        std::cerr << "Unknown token: " << token_str << std::endl;
+        q.push(new ErrorToken("Unknown token: " + token_str));
     }
 }
 
@@ -138,7 +138,7 @@ void Tokenizer::parse_letter_buffer(const std::string &letters, Queue<Token *> &
         }
         if (!foundFunc)
         {
-            std::cerr << "Unknown letter token: " << letters[i] << std::endl;
+            q.push(new ErrorToken("Unknown letter token: " + letters.substr(i, 1)));
             i++;
         }
     }

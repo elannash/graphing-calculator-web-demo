@@ -24,13 +24,19 @@ Queue<Token *> ShuntingYard::postfix(const Queue<Token *> &q)
         Token *current = infix_q.front();
         TOKEN_TYPES type = current->type_of();
 
+        if (type == ERROR)
+        {
+            std::cerr << "Error encountered: " << current->get_string() << "\n";
+            return Queue<Token *>();
+        }
+
         switch (type)
         {
         case NUMBER:
         case VARIABLE:
         {
             postfix_q.push(current);
-            previousWasOperatorOrLeftParen = false; // reset unary detection
+            previousWasOperatorOrLeftParen = false;
             break;
         }
         case OPERATOR:
@@ -58,18 +64,17 @@ Queue<Token *> ShuntingYard::postfix(const Queue<Token *> &q)
         case SPECIAL_FUNCTION:
         {
             holding_stack.push(current);
-            previousWasOperatorOrLeftParen = true; // functions expect arguments
+            previousWasOperatorOrLeftParen = true;
             break;
         }
         case LEFTPAREN:
         {
             holding_stack.push(current);
-            previousWasOperatorOrLeftParen = true; // new subexpression starts
+            previousWasOperatorOrLeftParen = true;
             break;
         }
         case RIGHTPAREN:
         {
-            // resolve operators until left parenthesis is found
             while (!holding_stack.empty() && holding_stack.top()->type_of() != LEFTPAREN)
             {
                 Token *top = holding_stack.pop();
@@ -83,10 +88,9 @@ Queue<Token *> ShuntingYard::postfix(const Queue<Token *> &q)
             else
             {
                 std::cerr << "Error: Mismatched parentheses.\n";
-                return postfix_q;
+                return Queue<Token *>();
             }
 
-            // if the top of the stack is a function, pop it to the postfix queue
             if (!holding_stack.empty() &&
                 (holding_stack.top()->type_of() == FUNCTION || holding_stack.top()->type_of() == SPECIAL_FUNCTION))
             {
@@ -94,32 +98,30 @@ Queue<Token *> ShuntingYard::postfix(const Queue<Token *> &q)
                 postfix_q.push(func);
             }
 
-            previousWasOperatorOrLeftParen = false; // reset context
+            previousWasOperatorOrLeftParen = false;
             break;
         }
         case ARGUMENT_SEPARATOR:
         {
-            // resolve operators until a left parenthesis is encountered
             while (!holding_stack.empty() && holding_stack.top()->type_of() != LEFTPAREN)
             {
                 Token *top = holding_stack.pop();
                 postfix_q.push(top);
             }
 
-            // ensure there is a matching left parenthesis
             if (holding_stack.empty() || holding_stack.top()->type_of() != LEFTPAREN)
             {
                 std::cerr << "Error: Argument separator without matching left parenthesis or function.\n";
-                return postfix_q;
+                return Queue<Token *>();
             }
 
-            previousWasOperatorOrLeftParen = true; // reset unary detection after a comma
+            previousWasOperatorOrLeftParen = true;
             break;
         }
         default:
         {
             std::cerr << "Error: Unknown token type encountered: " << current->get_string() << "\n";
-            break;
+            return Queue<Token *>();
         }
         }
 
@@ -131,7 +133,8 @@ Queue<Token *> ShuntingYard::postfix(const Queue<Token *> &q)
         Token *top = holding_stack.pop();
         if (top->type_of() == LEFTPAREN)
         {
-            std::cerr << "Error: Mismatched parentheses detected at end of input." << std::endl;
+            std::cerr << "Error: Mismatched parentheses detected at end of input.\n";
+            return Queue<Token *>();
         }
         else
         {
