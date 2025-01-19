@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/graphing-calculator-web-demo/static/css/main.03165965.css",
+    "main.js": "/graphing-calculator-web-demo/static/js/main.71e988b4.js",
+    "static/js/488.e75445ad.chunk.js": "/graphing-calculator-web-demo/static/js/488.e75445ad.chunk.js",
+    "static/media/manifold.otf": "/graphing-calculator-web-demo/static/media/manifold.82a31a08297cc862aa8f.otf",
+    "index.html": "/graphing-calculator-web-demo/index.html",
+    "main.03165965.css.map": "/graphing-calculator-web-demo/static/css/main.03165965.css.map",
+    "main.71e988b4.js.map": "/graphing-calculator-web-demo/static/js/main.71e988b4.js.map",
+    "488.e75445ad.chunk.js.map": "/graphing-calculator-web-demo/static/js/488.e75445ad.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.03165965.css",
+    "static/js/main.71e988b4.js"
+  ]
+}
