@@ -108,7 +108,7 @@ body, html {
 /* Sidebar Toggle Button */
 .sidebar .sidebar-toggle {
   position: absolute; /* Keep absolute for normal state */
-  right: 5px; /* Position near the right edge */
+  right: 15px; /* Position near the right edge */
   top: 5px; /* Position near the top */
   width: 32px; /* Fixed button size */
   height: 32px;
@@ -136,16 +136,16 @@ body, html {
 /* Ensure Eye Icon is Visible in Collapsed Sidebar */
 .sidebar.collapsed .sidebar-toggle svg {
   display: block; /* Ensure visibility */
-  width: 16px;
-  height: 16px;
+  width: 32px;
+  height: 32px;
   fill: #A5C5D6; /* Icon color */
   transition: transform 0.2s ease;
 }
 
 /* Toggle Button SVG */
 .sidebar-toggle svg {
-  width: 16px; /* Fixed icon size */
-  height: 16px;
+  width: 32px; /* Fixed icon size */
+  height: 32px;
   fill: #A5C5D6; /* Icon color */
   transition: transform 0.2s ease;
 }
