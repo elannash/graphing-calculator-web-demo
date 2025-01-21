@@ -18,7 +18,11 @@ const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const sidebarRef = useRef(null);
   const inputRefs = useRef([]);
-  const dragState = useRef({ isDragging: false, offsetX: 0, offsetY: 0 });
+  const dragState = useRef({
+    isDragging: false,
+    offsetX: 0,
+    offsetY: 0,
+  });
 
   const computeBufferedDomainRange = (domain, range) => {
     const bufferedDomain = [
@@ -137,12 +141,9 @@ const App = () => {
     }
   };
 
-  const handleFocusAndGraph = (index) => {
+  const handleFocus = (index) => {
     setEditingEquationIndex(index);
     setEquation(equations[index]);
-    if (inputRefs.current[index]) {
-      inputRefs.current[index].focus();
-    }
   };
 
   const handleEquationChange = (index, e) => {
@@ -157,7 +158,7 @@ const App = () => {
   };
 
   const startDrag = (e) => {
-    if (e.target.closest(".equation")) return;
+    if (e.target.closest(".equation")) return; // Prevent dragging when clicking on equations
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const sidebar = sidebarRef.current;
@@ -239,10 +240,14 @@ const App = () => {
               <div
                 key={index}
                 className="equation"
-                onClick={() => handleFocusAndGraph(index)}
+                onClick={() => {
+                  handleFocus(index);
+                  inputRefs.current[index]?.focus();
+                }}
                 onTouchStart={(e) => {
                   e.preventDefault();
-                  handleFocusAndGraph(index);
+                  handleFocus(index);
+                  inputRefs.current[index]?.focus();
                 }}
               >
                 <input
@@ -250,10 +255,7 @@ const App = () => {
                   className="equation-editable"
                   type="text"
                   value={eq}
-                  onFocus={(e) => {
-                    e.stopPropagation();
-                    handleFocusAndGraph(index);
-                  }}
+                  onFocus={() => handleFocus(index)}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
