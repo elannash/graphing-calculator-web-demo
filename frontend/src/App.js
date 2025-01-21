@@ -148,10 +148,7 @@ const App = () => {
     }
   };
 
-  const handleFocusAndFocusInput = (e, index) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+  const handleFocusAndFocusInput = (index) => {
     setEditingEquationIndex(index);
     setEquation(equations[index]);
     setTimeout(() => {
@@ -256,7 +253,7 @@ const App = () => {
               <div
                 key={index}
                 className="equation"
-                onPointerDown={(e) => handleFocusAndFocusInput(e, index)}
+                onClick={() => handleFocusAndFocusInput(index)}
               >
                 <input
                   ref={(el) => (inputRefs.current[index] = el)}
@@ -267,7 +264,7 @@ const App = () => {
                   readOnly={editingEquationIndex !== index}
                 />
                 <span
-                  onPointerDown={(e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     deleteEquation(index);
                   }}
