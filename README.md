@@ -48,7 +48,7 @@ While the backend utilizes WebAssembly for computation, the current version focu
 
 ## Contribution
 
-This project is open-source, and contributions are welcome! Feel free to submit issues, feature requests, or pull requests via the [GitHub repository](https://github.com/elannash/graphing-calculator).
+This project is open-source, and contributions are welcome! Feel free to submit issues, feature requests, or pull requests via the [GitHub repository](https://github.com/elannash/graphing-calculator-web-demo).
 
 ---
 
