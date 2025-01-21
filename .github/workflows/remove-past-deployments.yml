@@ -5,17 +5,14 @@ on:
     types:
       - success
 
+permissions:
+  deployments: write
+
 jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Navigate to frontend directory
-        run: cd frontend
-
-      - name: Authenticate with GitHub
+      - name: Authenticate with GitHub and Remove Past Deployments
         uses: actions/github-script@v6
         with:
           script: |
@@ -24,13 +21,29 @@ jobs:
               repo: context.repo.repo,
             });
 
+            console.log(`Found ${deployments.data.length} deployments.`);
+
             for (const deployment of deployments.data) {
               if (deployment.id !== context.payload.deployment.id) {
-                await github.repos.deleteDeployment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  deployment_id: deployment.id,
-                });
-                console.log(`Deleted deployment: ${deployment.id}`);
+                try {
+                  console.log(`Marking deployment ${deployment.id} as inactive.`);
+                  await github.repos.createDeploymentStatus({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    deployment_id: deployment.id,
+                    state: "inactive",
+                  });
+
+                  console.log(`Deleting deployment: ${deployment.id}`);
+                  await github.repos.deleteDeployment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    deployment_id: deployment.id,
+                  });
+                } catch (error) {
+                  console.error(`Failed to delete deployment ${deployment.id}:`, error.message);
+                }
+              } else {
+                console.log(`Skipping current deployment: ${deployment.id}`);
               }
             }
