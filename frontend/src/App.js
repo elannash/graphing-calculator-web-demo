@@ -153,10 +153,17 @@ const App = () => {
     setEquation(equations[index]);
     setTimeout(() => {
       if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false;
+        inputRefs.current[index].readOnly = false; // Allow input focus
         inputRefs.current[index].focus();
       }
     }, 0);
+  };
+
+  const handleInputClick = (index) => {
+    if (inputRefs.current[index]) {
+      inputRefs.current[index].readOnly = false; // Allow input focus
+      inputRefs.current[index].focus();
+    }
   };
 
   const handleEquationChange = (index, e) => {
@@ -260,6 +267,7 @@ const App = () => {
                   className="equation-editable"
                   type="text"
                   value={eq}
+                  onClick={() => handleInputClick(index)}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
