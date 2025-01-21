@@ -16,6 +16,7 @@ const App = () => {
   const [isModuleReady, setIsModuleReady] = useState(false);
   const [editingEquationIndex, setEditingEquationIndex] = useState(null);
   const [sidebarVisible, setSidebarVisible] = useState(true);
+  const [deleteDelay, setDeleteDelay] = useState(false);
   const sidebarRef = useRef(null);
   const inputRefs = useRef([]);
   const dragState = useRef({
@@ -116,6 +117,7 @@ const App = () => {
   };
 
   const addNewEquation = () => {
+    if (deleteDelay) return;
     setEquations([...equations, ""]);
     setEditingEquationIndex(equations.length);
     setTimeout(() => {
@@ -126,6 +128,9 @@ const App = () => {
   };
 
   const deleteEquation = (index) => {
+    setDeleteDelay(true);
+    setTimeout(() => setDeleteDelay(false), 200);
+
     const newEquations = equations.filter((_, i) => i !== index);
     const deletingCurrentEquation = equations[index] === equation;
     setEquations(newEquations);
