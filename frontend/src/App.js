@@ -240,19 +240,21 @@ const App = () => {
   <div
     key={index}
     className="equation"
-    onClick={() => {
-      handleFocus(index); // Handle graphing logic
+    onClick={(e) => {
+      e.stopPropagation(); // Stop event propagation to avoid interference
+      handleFocus(index); // Set the correct equation as active
       if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false; // Temporarily remove readOnly
-        inputRefs.current[index].focus(); // Programmatically focus
+        inputRefs.current[index].readOnly = false; // Ensure readOnly is disabled
+        inputRefs.current[index].focus(); // Focus the correct input
       }
     }}
     onTouchStart={(e) => {
       e.preventDefault(); // Prevent default touch behavior
-      handleFocus(index); // Handle graphing logic
+      e.stopPropagation(); // Stop propagation
+      handleFocus(index); // Set the correct equation as active
       if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false; // Temporarily remove readOnly
-        inputRefs.current[index].focus(); // Programmatically focus
+        inputRefs.current[index].readOnly = false; // Ensure readOnly is disabled
+        inputRefs.current[index].focus(); // Focus the correct input
       }
     }}
   >
@@ -262,23 +264,23 @@ const App = () => {
       type="text"
       value={eq}
       onFocus={(e) => {
-        handleFocus(index); // Ensure graph updates on focus
-        e.target.readOnly = false; // Ensure input is editable when focused
+        e.stopPropagation(); // Ensure focus doesn't trigger unwanted events
+        handleFocus(index); // Set the correct equation as active
       }}
       onBlur={(e) => {
-        e.target.readOnly = editingEquationIndex !== index; // Restore readOnly based on index
+        e.target.readOnly = editingEquationIndex !== index; // Restore readOnly when not editing
       }}
-      onChange={(e) => handleEquationChange(index, e)} // Handle text changes
+      onChange={(e) => handleEquationChange(index, e)} // Handle changes to the input value
       readOnly={editingEquationIndex !== index} // Conditionally apply readOnly
     />
     <span
       onClick={(e) => {
-        e.stopPropagation(); // Prevent the click from affecting the parent
-        deleteEquation(index);
+        e.stopPropagation(); // Prevent click from affecting parent
+        deleteEquation(index); // Delete the correct equation
       }}
       onTouchStart={(e) => {
-        e.stopPropagation(); // Prevent the touch from affecting the parent
-        deleteEquation(index);
+        e.stopPropagation(); // Prevent touch from affecting parent
+        deleteEquation(index); // Delete the correct equation
       }}
       className="delete-icon"
     >
