@@ -118,13 +118,11 @@ const App = () => {
 
   const addNewEquation = () => {
     if (deleteDelay) return;
-    const newIndex = equations.length;
     setEquations([...equations, ""]);
-    setEditingEquationIndex(newIndex);
+    setEditingEquationIndex(equations.length);
     setTimeout(() => {
-      if (inputRefs.current[newIndex]) {
-        inputRefs.current[newIndex].readOnly = false;
-        inputRefs.current[newIndex].focus();
+      if (inputRefs.current[equations.length]) {
+        inputRefs.current[equations.length].focus();
       }
     }, 0);
   };
@@ -148,22 +146,18 @@ const App = () => {
     }
   };
 
-  const handleFocusAndFocusInput = (index) => {
+  const handleFocusAndFocusInput = (e, index) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setEditingEquationIndex(index);
     setEquation(equations[index]);
     setTimeout(() => {
       if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false; // Allow input focus
+        inputRefs.current[index].readOnly = false;
         inputRefs.current[index].focus();
       }
-    }, 0);
-  };
-
-  const handleInputClick = (index) => {
-    if (inputRefs.current[index]) {
-      inputRefs.current[index].readOnly = false; // Allow input focus
-      inputRefs.current[index].focus();
-    }
+    }, 100);
   };
 
   const handleEquationChange = (index, e) => {
@@ -260,19 +254,18 @@ const App = () => {
               <div
                 key={index}
                 className="equation"
-                onClick={() => handleFocusAndFocusInput(index)}
+                onPointerDown={(e) => handleFocusAndFocusInput(e, index)}
               >
                 <input
                   ref={(el) => (inputRefs.current[index] = el)}
                   className="equation-editable"
                   type="text"
                   value={eq}
-                  onClick={() => handleInputClick(index)}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
                 <span
-                  onClick={(e) => {
+                  onPointerDown={(e) => {
                     e.stopPropagation();
                     deleteEquation(index);
                   }}
