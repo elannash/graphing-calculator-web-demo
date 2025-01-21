@@ -118,11 +118,13 @@ const App = () => {
 
   const addNewEquation = () => {
     if (deleteDelay) return;
+    const newIndex = equations.length;
     setEquations([...equations, ""]);
-    setEditingEquationIndex(equations.length);
+    setEditingEquationIndex(newIndex);
     setTimeout(() => {
-      if (inputRefs.current[equations.length]) {
-        inputRefs.current[equations.length].focus();
+      if (inputRefs.current[newIndex]) {
+        inputRefs.current[newIndex].readOnly = false;
+        inputRefs.current[newIndex].focus();
       }
     }, 0);
   };
@@ -157,7 +159,7 @@ const App = () => {
         inputRefs.current[index].readOnly = false;
         inputRefs.current[index].focus();
       }
-    }, 100);
+    }, 0);
   };
 
   const handleEquationChange = (index, e) => {
