@@ -12,17 +12,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Authenticate and Remove Old Deployments
+      - name: Navigate to frontend directory
+        run: cd frontend
+
+      - name: Authenticate with GitHub
         uses: actions/github-script@v6
         with:
           script: |
-            // List all deployments for the repository
             const deployments = await github.repos.listDeployments({
               owner: context.repo.owner,
               repo: context.repo.repo,
             });
 
-            // Loop through deployments and delete older ones
             for (const deployment of deployments.data) {
               if (deployment.id !== context.payload.deployment.id) {
                 await github.repos.deleteDeployment({
@@ -30,6 +31,6 @@ jobs:
                   repo: context.repo.repo,
                   deployment_id: deployment.id,
                 });
-                console.log(`Deleted deployment with ID: ${deployment.id}`);
+                console.log(`Deleted deployment: ${deployment.id}`);
               }
             }
