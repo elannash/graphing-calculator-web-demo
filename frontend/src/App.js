@@ -144,12 +144,15 @@ const App = () => {
   const handleFocusAndFocusInput = (e, index) => {
     e.preventDefault();
     e.stopPropagation();
+
     setEditingEquationIndex(index);
     setEquation(equations[index]);
-    if (inputRefs.current[index]) {
-      inputRefs.current[index].readOnly = false;
-      inputRefs.current[index].focus();
-    }
+    setTimeout(() => {
+      if (inputRefs.current[index]) {
+        inputRefs.current[index].readOnly = false;
+        inputRefs.current[index].focus();
+      }
+    }, 100);
   };
 
   const handleEquationChange = (index, e) => {
@@ -164,7 +167,7 @@ const App = () => {
   };
 
   const startDrag = (e) => {
-    if (e.target.closest(".equation")) return; // Prevent dragging when clicking on equations
+    if (e.target.closest(".equation")) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const sidebar = sidebarRef.current;
