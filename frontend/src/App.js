@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Graph from "./components/Graph";
 import "./App.css";
 
-const initialEquations = ["x*sin(x)", "x^2 - 5", "cos(x) + 2", "log(x + 10)"];
+const initialEquations = ["x*sin(x)", "x^2 - 5", "cos(x) + 2", "log(x + 10)", "x^2-sin(x*max(2,x))", "-sin(1/x^3)"];
 const bufferMultiplier = 2;
 const DEFAULT_DOMAIN = [-10, 10];
 const DEFAULT_RANGE = [-10, 10];
@@ -82,7 +82,7 @@ const App = () => {
           range
         );
         const GraphInfo = new moduleInstance.Graph_Info(
-          { first: 800, second: 600 },
+          { first: 800, second: 800 },
           { first: 0, second: 0 },
           { first: bufferedDomain[0], second: bufferedDomain[1] },
           { first: bufferedRange[0], second: bufferedRange[1] },
@@ -231,7 +231,10 @@ const App = () => {
         onMouseDown={(e) => startDrag(e)}
         onTouchStart={(e) => startDrag(e)}
       >
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
+        <button
+          className="sidebar-toggle"
+          onClick={toggleSidebar}
+        >
           {sidebarVisible ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -143,8 +143,7 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         transparent 1px,
         transparent 4px
       )`,
-      animation: "scanline 1.5s linear infinite",
-      mixBlendMode: "soft-light"
+      animation: "scanline 2s linear infinite",
     }}
   />
 
