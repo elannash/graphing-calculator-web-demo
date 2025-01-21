@@ -122,6 +122,7 @@ const App = () => {
     setEditingEquationIndex(equations.length);
     setTimeout(() => {
       if (inputRefs.current[equations.length]) {
+        inputRefs.current[equations.length].readOnly = false;
         inputRefs.current[equations.length].focus();
       }
     }, 0);
