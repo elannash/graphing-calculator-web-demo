@@ -18,11 +18,7 @@ const App = () => {
   const [sidebarVisible, setSidebarVisible] = useState(true);
   const sidebarRef = useRef(null);
   const inputRefs = useRef([]);
-  const dragState = useRef({
-    isDragging: false,
-    offsetX: 0,
-    offsetY: 0,
-  });
+  const dragState = useRef({ isDragging: false, offsetX: 0, offsetY: 0 });
 
   const computeBufferedDomainRange = (domain, range) => {
     const bufferedDomain = [
@@ -141,9 +137,12 @@ const App = () => {
     }
   };
 
-  const handleFocus = (index) => {
+  const handleFocusAndGraph = (index) => {
     setEditingEquationIndex(index);
     setEquation(equations[index]);
+    if (inputRefs.current[index]) {
+      inputRefs.current[index].focus();
+    }
   };
 
   const handleEquationChange = (index, e) => {
@@ -158,7 +157,7 @@ const App = () => {
   };
 
   const startDrag = (e) => {
-    if (e.target.closest(".equation")) return; // Prevent dragging when clicking on equations
+    if (e.target.closest(".equation")) return;
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
     const sidebar = sidebarRef.current;
@@ -240,14 +239,14 @@ const App = () => {
               <div
                 key={index}
                 className="equation"
-                onClick={() => handleFocus(index)}
+                onClick={() => handleFocusAndGraph(index)}
               >
                 <input
                   ref={(el) => (inputRefs.current[index] = el)}
                   className="equation-editable"
                   type="text"
                   value={eq}
-                  onFocus={() => handleFocus(index)}
+                  onFocus={() => handleFocusAndGraph(index)}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
