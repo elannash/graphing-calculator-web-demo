@@ -15,11 +15,24 @@ const App = () => {
   const [equations, setEquations] = useState(initialEquations);
   const [isModuleReady, setIsModuleReady] = useState(false);
   const [editingEquationIndex, setEditingEquationIndex] = useState(null);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
+  const sidebarRef = useRef(null);
   const inputRefs = useRef([]);
+  const dragState = useRef({
+    isDragging: false,
+    offsetX: 0,
+    offsetY: 0,
+  });
 
   const computeBufferedDomainRange = (domain, range) => {
-    const bufferedDomain = [domain[0] * bufferMultiplier, domain[1] * bufferMultiplier];
-    const bufferedRange = [range[0] * bufferMultiplier, range[1] * bufferMultiplier];
+    const bufferedDomain = [
+      domain[0] * bufferMultiplier,
+      domain[1] * bufferMultiplier,
+    ];
+    const bufferedRange = [
+      range[0] * bufferMultiplier,
+      range[1] * bufferMultiplier,
+    ];
     return { bufferedDomain, bufferedRange };
   };
 
@@ -50,7 +63,8 @@ const App = () => {
           setIsModuleReady(true);
         });
       };
-      script.onerror = () => console.error("Failed to load WebAssembly script!");
+      script.onerror = () =>
+        console.error("Failed to load WebAssembly script!");
       document.body.appendChild(script);
     } else if (!isModuleReady) {
       setIsModuleReady(true);
@@ -62,7 +76,10 @@ const App = () => {
     const fetchPoints = async () => {
       try {
         const moduleInstance = window.ModuleInstance;
-        const { bufferedDomain, bufferedRange } = computeBufferedDomainRange(domain, range);
+        const { bufferedDomain, bufferedRange } = computeBufferedDomainRange(
+          domain,
+          range
+        );
         const GraphInfo = new moduleInstance.Graph_Info(
           { first: 800, second: 600 },
           { first: 0, second: 0 },
@@ -73,10 +90,13 @@ const App = () => {
         );
         const Plot = new moduleInstance.Plot(GraphInfo);
         const wasmPoints = Plot.generate_points();
-        const generatedPoints = Array.from({ length: wasmPoints.size() }, (_, i) => {
-          const point = wasmPoints.get(i);
-          return [point.first, point.second];
-        });
+        const generatedPoints = Array.from(
+          { length: wasmPoints.size() },
+          (_, i) => {
+            const point = wasmPoints.get(i);
+            return [point.first, point.second];
+          }
+        );
         setPoints(generatedPoints);
       } catch (error) {
         console.error("Error during WebAssembly execution:", error);
@@ -133,34 +153,53 @@ const App = () => {
     setEquation(updatedEquations[index]);
   };
 
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
   const startDrag = (e) => {
-    e.currentTarget.dataset.dragging = "true";
-    e.currentTarget.dataset.dragStartX = e.clientX;
-    e.currentTarget.dataset.dragStartY = e.clientY;
-    e.currentTarget.dataset.dragLeft = e.currentTarget.offsetLeft;
-    e.currentTarget.dataset.dragTop = e.currentTarget.offsetTop;
+    if (e.target.closest(".equation")) return; // Prevent dragging when clicking on equations
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    const sidebar = sidebarRef.current;
+
+    dragState.current = {
+      isDragging: true,
+      offsetX: clientX - sidebar.offsetLeft,
+      offsetY: clientY - sidebar.offsetTop,
+    };
+
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", stopDrag);
+    document.addEventListener("touchmove", drag);
+    document.addEventListener("touchend", stopDrag);
   };
 
   const drag = (e) => {
-    if (e.currentTarget.dataset.dragging !== "true") return;
-    const startX = Number(e.currentTarget.dataset.dragStartX);
-    const startY = Number(e.currentTarget.dataset.dragStartY);
-    const startLeft = Number(e.currentTarget.dataset.dragLeft);
-    const startTop = Number(e.currentTarget.dataset.dragTop);
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    const newLeft = startLeft + dx;
-    const newTop = startTop + dy;
-    const w = e.currentTarget.offsetWidth;
-    const h = e.currentTarget.offsetHeight;
-    const clampedLeft = Math.max(0, Math.min(window.innerWidth - w, newLeft));
-    const clampedTop = Math.max(0, Math.min(window.innerHeight - h, newTop));
-    e.currentTarget.style.left = `${clampedLeft}px`;
-    e.currentTarget.style.top = `${clampedTop}px`;
+    if (!dragState.current.isDragging) return;
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+
+    const sidebar = sidebarRef.current;
+    const newLeft = clientX - dragState.current.offsetX;
+    const newTop = clientY - dragState.current.offsetY;
+
+    sidebar.style.left = `${Math.max(
+      0,
+      Math.min(window.innerWidth - sidebar.offsetWidth, newLeft)
+    )}px`;
+    sidebar.style.top = `${Math.max(
+      0,
+      Math.min(window.innerHeight - sidebar.offsetHeight, newTop)
+    )}px`;
   };
 
-  const stopDrag = (e) => {
-    e.currentTarget.dataset.dragging = "false";
+  const stopDrag = () => {
+    dragState.current.isDragging = false;
+    document.removeEventListener("mousemove", drag);
+    document.removeEventListener("mouseup", stopDrag);
+    document.removeEventListener("touchmove", drag);
+    document.removeEventListener("touchend", stopDrag);
   };
 
   return (
@@ -171,36 +210,63 @@ const App = () => {
         range={range}
         onDomainRangeChange={handleDomainRangeChange}
       />
-      <div className="sidebar" onMouseDown={startDrag} onMouseMove={drag} onMouseUp={stopDrag}>
-        <h3>Equation Controls</h3>
-        <button onClick={resetDomainAndRange}>Reset Domain & Range</button>
-
-        {equations.map((eq, index) => (
-          <div key={index} className="equation">
-            <input
-              ref={(el) => (inputRefs.current[index] = el)}
-              className="equation-editable"
-              type="text"
-              value={eq}
-              onFocus={() => handleFocus(index)}
-              onChange={(e) => handleEquationChange(index, e)}
-              readOnly={editingEquationIndex !== index}
-            />
-            <span
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteEquation(index);
-              }}
-              className="delete-icon"
+      <div
+        ref={sidebarRef}
+        className={`sidebar ${sidebarVisible ? "" : "collapsed"}`}
+        onMouseDown={(e) => startDrag(e)}
+        onTouchStart={(e) => startDrag(e)}
+      >
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          {sidebarVisible ? (
+            <svg viewBox="0 0 24 24">
+              <path d="M2 12 C4 6, 8 3, 12 3s8 3,10 9c-2 6-6 9-10 9s-8-3-10-9z M6 12 l12 0" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 24 24">
+              <path d="M2 12 C4 6, 8 3, 12 3s8 3,10 9c-2 6-6 9-10 9s-8-3-10-9z M12 8 a4 4 0 1 1 0 8 a4 4 0 0 1 0-8" />
+            </svg>
+          )}
+        </button>
+        {sidebarVisible && (
+          <>
+            <h3>Equation Controls</h3>
+            <button
+              className="sidebar-reset-button"
+              onClick={resetDomainAndRange}
             >
-              ✖
-            </span>
-          </div>
-        ))}
-
-        <div onClick={addNewEquation} className="add-equation">
-          +
-        </div>
+              Reset Domain & Range
+            </button>
+            {equations.map((eq, index) => (
+              <div
+                key={index}
+                className="equation"
+                onClick={() => handleFocus(index)}
+              >
+                <input
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  className="equation-editable"
+                  type="text"
+                  value={eq}
+                  onFocus={() => handleFocus(index)}
+                  onChange={(e) => handleEquationChange(index, e)}
+                  readOnly={editingEquationIndex !== index}
+                />
+                <span
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteEquation(index);
+                  }}
+                  className="delete-icon"
+                >
+                  ✖
+                </span>
+              </div>
+            ))}
+            <div onClick={addNewEquation} className="add-equation">
+              +
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

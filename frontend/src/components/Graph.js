@@ -120,13 +120,14 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
         color: "#A2C0D2",
         fontFamily: "'Manifold', sans-serif",
         textShadow: "0 0 3px #A2C0D2",
-        border: "2px solid #A2C0D2",
         overflow: "hidden",
         imageRendering: "pixelated",
         boxShadow: "0 0 5px rgba(162, 192, 210, 0.3)",
       }}
     >
       <Line data={data} options={options} />
+
+      {/* Scanlines */}
       <div
         style={{
           position: "absolute",
@@ -136,21 +137,16 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
           height: "100%",
           pointerEvents: "none",
           background: `repeating-linear-gradient(
-            transparent 0px,
+            rgba(255, 255, 255, 0.02) 0px,
             rgba(255, 255, 255, 0.02) 1px,
             transparent 1px,
-            transparent 3px
-          ),
-          repeating-linear-gradient(
-            90deg,
-            transparent 0px,
-            rgba(255, 255, 255, 0.02) 1px,
-            transparent 1px,
-            transparent 3px
+            transparent 4px
           )`,
+          animation: "scanline 2s linear infinite",
         }}
       />
 
+      {/* Pixelation Overlay */}
       <div
         style={{
           position: "absolute",
@@ -159,10 +155,32 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
           width: "100%",
           height: "100%",
           pointerEvents: "none",
-          background: "radial-gradient(circle, transparent 90%, #061326 100%)",
+          backgroundImage: `url('data:image/png;base64,[base64-pixel-grid-texture]')`,
+          opacity: 0.15,
+          mixBlendMode: "soft-light",
+        }}
+      />
+
+      {/* Radial Vignette */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          background: "radial-gradient(circle, transparent 85%, #061326 100%)",
           mixBlendMode: "multiply",
         }}
       />
+
+      <style>{`
+        @keyframes scanline {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(3px); }
+        }
+      `}</style>
     </div>
   );
 };

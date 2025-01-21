@@ -37,21 +37,51 @@ body, html {
   border-radius: 10px;
   color: #A5C5D6;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-  padding: 20px;
+  padding: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
   overflow-y: auto;
   user-select: none; /* Prevent highlighting */
   backdrop-filter: blur(6px); /* Adds a glass-like effect */
+  touch-action: none; /* Prevent touch scrolling during drag */
+  transition: width 0.3s ease, height 0.3s ease; /* Smooth collapse/expand transition */
+  z-index: 10;
 }
 
-.sidebar h3 {
-  text-align: center;
-  font-size: 18px;
-  text-transform: uppercase;
-  margin-bottom: 20px;
-  letter-spacing: 1px;
+.sidebar:active {
+  cursor: grabbing;
 }
 
-/* Reset Button */
+.sidebar.collapsed {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 10;
+  background: rgba(14, 26, 36, 0.85);
+  border: 3px solid #A5C5D6;
+  position: fixed;
+}
+
+/* Drag Icon */
+.drag-icon {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 5px;
+  background: linear-gradient(to right, #A5C5D6, transparent, #A5C5D6);
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Base Button Styling */
 .sidebar button {
   display: block;
   width: 100%;
@@ -65,16 +95,99 @@ body, html {
   font-size: 14px;
   font-family: 'Manifold', sans-serif;
   cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
+  transition: transform 0.1s, background-color 0.2s;
 }
 
 .sidebar button:hover {
-  background-color: #0E1A24;
   transform: scale(1.05);
 }
 
 .sidebar button:active {
   transform: scale(0.95);
+}
+
+/* Sidebar Toggle Button */
+.sidebar .sidebar-toggle {
+  position: absolute; /* Keep absolute for normal state */
+  right: 5px; /* Position near the right edge */
+  top: 5px; /* Position near the top */
+  width: 32px; /* Fixed button size */
+  height: 32px;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 20;
+  border: none;
+  background-color: transparent;
+}
+
+/* Centering Toggle Button in Collapsed Sidebar */
+.sidebar.collapsed .sidebar-toggle {
+  position: static; /* Remove absolute positioning */
+  width: 32px;
+  height: 32px;
+  margin: 0 auto; /* Center within flex container */
+  display: flex;
+  justify-content: center; /* Ensure icon stays centered */
+  align-items: center;
+}
+
+/* Ensure Eye Icon is Visible in Collapsed Sidebar */
+.sidebar.collapsed .sidebar-toggle svg {
+  display: block; /* Ensure visibility */
+  width: 16px;
+  height: 16px;
+  fill: #A5C5D6; /* Icon color */
+  transition: transform 0.2s ease;
+}
+
+/* Toggle Button SVG */
+.sidebar-toggle svg {
+  width: 16px; /* Fixed icon size */
+  height: 16px;
+  fill: #A5C5D6; /* Icon color */
+  transition: transform 0.2s ease;
+}
+
+.sidebar-toggle:hover svg {
+  transform: scale(1.15); /* Slight hover effect */
+}
+
+/* Equation Controls Title */
+.sidebar h3 {
+  text-align: center;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin-top: 30px; /* Pushes title below toggle icon */
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+
+/* Equation Bubble Styling */
+.equation {
+  position: relative;
+  background: #0E1A24;
+  border: 2px solid #A5C5D6;
+  color: #A5C5D6;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-family: 'Manifold', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+  min-height: 50px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.equation:hover {
+  background: #1C2733;
+  box-shadow: 0px 2px 5px rgba(165, 197, 214, 0.5);
+  transform: scale(1.05);
 }
 
 .equation-editable {
@@ -86,78 +199,29 @@ body, html {
   width: 100%;
   cursor: text;
   text-align: center;
-  color: #A5C5D6;
 }
 
-/* Equation Bubble Styling */
-.equation {
-  position: relative; /* Enables absolute positioning for delete icon */
-  background: #0E1A24;
-  border: 2px solid #A5C5D6;
-  color: #A5C5D6;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 10px;
-  font-family: 'Manifold', sans-serif;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
-  min-height: 50px; /* Consistent height for all bubbles */
-  text-align: center; /* Center text horizontally */
-  display: flex;
-  justify-content: center;
-  align-items: center; /* Center text vertically */
-}
-
-.equation span {
-  /* Removed "direction: rtl;" to fix reversed text typing */
-  /* If you want standard left-to-right, just omit direction entirely, 
-     or explicitly declare: direction: ltr; */
-
-  outline: none;
-  border: none;
-  background: none;
-  user-select: text; /* Allow text selection in editable mode */
-  cursor: text; /* Show text cursor */
-  font-family: 'Manifold', sans-serif;
-  z-index: 1; /* Ensure it doesn't overlap the delete icon */
-  white-space: nowrap; /* Prevent wrapping */
-  overflow: hidden; /* Hide overflowing text */
-  text-overflow: ellipsis; /* Add ellipsis for overflowed text */
-  /* text-align: left;  // optional, depending on your preference */
-}
-
-/* X Button for Each Bubble */
+/* Delete Icon */
 .delete-icon {
   position: absolute;
-  top: 5px; /* Correct top placement */
-  right: 10px; /* Correct right placement */
+  top: 5px;
+  right: 10px;
   font-size: 14px;
   font-weight: bold;
   color: #A5C5D6;
   cursor: pointer;
-  opacity: 0; /* Initially hidden */
+  opacity: 0;
   transition: opacity 0.2s, transform 0.2s;
-  z-index: 10; /* Ensure it appears above the text */
-  user-select: none;
-  pointer-events: auto; /* Ensure it's clickable */
 }
 
 .equation:hover .delete-icon {
-  opacity: 1; /* Show on hover */
+  opacity: 1;
   transform: scale(1.2);
 }
 
 .delete-icon:hover {
   color: #c0e4f7;
   transform: scale(1.4);
-  cursor: pointer; /* Ensures hand cursor remains */
-}
-
-/* Equation Bubble Hover Effect */
-.equation:hover {
-  background: #1C2733;
-  box-shadow: 0px 2px 5px rgba(165, 197, 214, 0.5);
-  transform: scale(1.05);
 }
 
 /* Add New Equation Button */
@@ -185,11 +249,19 @@ body, html {
   transform: scale(0.95);
 }
 
+/* Collapsed Sidebar Content */
+.sidebar.collapsed .drag-icon {
+  display: none;
+}
+
+.sidebar.collapsed .equation,
+.sidebar.collapsed .add-equation,
+.sidebar.collapsed h3,
+.sidebar.collapsed button {
+  display: none;
+}
+
 /* Prevent Text Selection While Dragging */
 .sidebar, .equation, .add-equation {
   user-select: none;
-}
-
-canvas {
-  display: block;
 }
