@@ -43,8 +43,7 @@ body, html {
   overflow-y: auto;
   user-select: none; /* Prevent highlighting */
   backdrop-filter: blur(6px); /* Adds a glass-like effect */
-  touch-action: none; /* Prevent touch scrolling during drag */
-  transition: width 0.3s ease, height 0.3s ease; /* Smooth collapse/expand transition */
+  transition: width 0.2s ease, height 0.2s ease; /* Smooth collapse/expand transition */
   z-index: 10;
 }
 
