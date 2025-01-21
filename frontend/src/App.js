@@ -141,9 +141,15 @@ const App = () => {
     }
   };
 
-  const handleFocus = (index) => {
+  const handleFocusAndFocusInput = (e, index) => {
+    e.preventDefault();
+    e.stopPropagation();
     setEditingEquationIndex(index);
     setEquation(equations[index]);
+    if (inputRefs.current[index]) {
+      inputRefs.current[index].readOnly = false;
+      inputRefs.current[index].focus();
+    }
   };
 
   const handleEquationChange = (index, e) => {
@@ -237,58 +243,30 @@ const App = () => {
               Reset Domain & Range
             </button>
             {equations.map((eq, index) => (
-  <div
-    key={index}
-    className="equation"
-    onClick={(e) => {
-      e.stopPropagation(); // Stop event propagation to avoid interference
-      handleFocus(index); // Set the correct equation as active
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false; // Ensure readOnly is disabled
-        inputRefs.current[index].focus(); // Focus the correct input
-      }
-    }}
-    onTouchStart={(e) => {
-      e.preventDefault(); // Prevent default touch behavior
-      e.stopPropagation(); // Stop propagation
-      handleFocus(index); // Set the correct equation as active
-      if (inputRefs.current[index]) {
-        inputRefs.current[index].readOnly = false; // Ensure readOnly is disabled
-        inputRefs.current[index].focus(); // Focus the correct input
-      }
-    }}
-  >
-    <input
-      ref={(el) => (inputRefs.current[index] = el)}
-      className="equation-editable"
-      type="text"
-      value={eq}
-      onFocus={(e) => {
-        e.stopPropagation(); // Ensure focus doesn't trigger unwanted events
-        handleFocus(index); // Set the correct equation as active
-      }}
-      onBlur={(e) => {
-        e.target.readOnly = editingEquationIndex !== index; // Restore readOnly when not editing
-      }}
-      onChange={(e) => handleEquationChange(index, e)} // Handle changes to the input value
-      readOnly={editingEquationIndex !== index} // Conditionally apply readOnly
-    />
-    <span
-      onClick={(e) => {
-        e.stopPropagation(); // Prevent click from affecting parent
-        deleteEquation(index); // Delete the correct equation
-      }}
-      onTouchStart={(e) => {
-        e.stopPropagation(); // Prevent touch from affecting parent
-        deleteEquation(index); // Delete the correct equation
-      }}
-      className="delete-icon"
-    >
-      ✖
-    </span>
-  </div>
-))}
-
+              <div
+                key={index}
+                className="equation"
+                onPointerDown={(e) => handleFocusAndFocusInput(e, index)}
+              >
+                <input
+                  ref={(el) => (inputRefs.current[index] = el)}
+                  className="equation-editable"
+                  type="text"
+                  value={eq}
+                  onChange={(e) => handleEquationChange(index, e)}
+                  readOnly={editingEquationIndex !== index}
+                />
+                <span
+                  onPointerDown={(e) => {
+                    e.stopPropagation();
+                    deleteEquation(index);
+                  }}
+                  className="delete-icon"
+                >
+                  ✖
+                </span>
+              </div>
+            ))}
             <div onClick={addNewEquation} className="add-equation">
               +
             </div>
