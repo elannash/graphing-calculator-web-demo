@@ -261,6 +261,8 @@ const App = () => {
                   className="equation-editable"
                   type="text"
                   value={eq}
+                  onClick={() => inputRefs.current[index]?.focus()}
+                  onFocus={() => setEditingEquationIndex(index)}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
@@ -275,6 +277,7 @@ const App = () => {
                 </span>
               </div>
             ))}
+
             <div onClick={addNewEquation} className="add-equation">
               +
             </div>
