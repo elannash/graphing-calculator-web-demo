@@ -240,18 +240,29 @@ const App = () => {
                 key={index}
                 className="equation"
                 onClick={() => handleFocusAndGraph(index)}
+                onTouchStart={(e) => {
+                  e.preventDefault();
+                  handleFocusAndGraph(index);
+                }}
               >
                 <input
                   ref={(el) => (inputRefs.current[index] = el)}
                   className="equation-editable"
                   type="text"
                   value={eq}
-                  onFocus={() => handleFocusAndGraph(index)}
+                  onFocus={(e) => {
+                    e.stopPropagation();
+                    handleFocusAndGraph(index);
+                  }}
                   onChange={(e) => handleEquationChange(index, e)}
                   readOnly={editingEquationIndex !== index}
                 />
                 <span
                   onClick={(e) => {
+                    e.stopPropagation();
+                    deleteEquation(index);
+                  }}
+                  onTouchStart={(e) => {
                     e.stopPropagation();
                     deleteEquation(index);
                   }}
