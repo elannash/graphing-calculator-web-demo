@@ -2,8 +2,15 @@ import React, { useState, useEffect, useRef } from "react";
 import Graph from "./components/Graph";
 import "./App.css";
 
-const initialEquations = ["x*sin(x)", "x^2 - 5", "cos(x) + 2", "log(x + 10)", "x^2-sin(x*max(2,x))", "-sin(1/x^3)"];
-const bufferMultiplier = 2;
+const initialEquations = [
+  "x*sin(x)",
+  "x^2 - 5",
+  "cos(x) + 2",
+  "log(x + 10)",
+  "x^2-sin(x*max(2,x))",
+  "-5sin(5/x^3)",
+];
+const bufferMultiplier = 1.5;
 const DEFAULT_DOMAIN = [-10, 10];
 const DEFAULT_RANGE = [-10, 10];
 
@@ -26,14 +33,12 @@ const App = () => {
   });
 
   const computeBufferedDomainRange = (domain, range) => {
-    const bufferedDomain = [
-      domain[0] * bufferMultiplier,
-      domain[1] * bufferMultiplier,
-    ];
-    const bufferedRange = [
-      range[0] * bufferMultiplier,
-      range[1] * bufferMultiplier,
-    ];
+    const bufferSize = ((domain[1] - domain[0]) * (bufferMultiplier - 1)) / 2;
+    const bufferedDomain = [domain[0] - bufferSize, domain[1] + bufferSize];
+
+    const rangeSize = ((range[1] - range[0]) * (bufferMultiplier - 1)) / 2;
+    const bufferedRange = [range[0] - rangeSize, range[1] + rangeSize];
+
     return { bufferedDomain, bufferedRange };
   };
 
@@ -148,7 +153,7 @@ const App = () => {
   };
 
   const handleFocusAndFocusInput = (e, index) => {
-    e.preventDefault();
+    // e.preventDefault();
     e.stopPropagation();
 
     setEditingEquationIndex(index);
@@ -231,10 +236,7 @@ const App = () => {
         onMouseDown={(e) => startDrag(e)}
         onTouchStart={(e) => startDrag(e)}
       >
-        <button
-          className="sidebar-toggle"
-          onClick={toggleSidebar}
-        >
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
           {sidebarVisible ? (
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -80,8 +80,7 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
           pinch: { enabled: true },
           mode: "xy",
           animation: {
-            easing: "easeOutQuad",
-            duration: 100,
+            duration: 0,
           },
           onZoomComplete: ({ chart }) => handleZoom(chart),
         },
