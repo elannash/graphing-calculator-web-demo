@@ -112,82 +112,81 @@ const Graph = ({ points, domain, range, onDomainRangeChange }) => {
 
   return (
     <div
-  style={{
-    position: "relative",
-    width: "100vw",
-    height: "100vh",
-    backgroundColor: "#061326",
-    color: "#A2C0D2",
-    fontFamily: "'Manifold', sans-serif",
-    textShadow: "0 0 3px #A2C0D2",
-    overflow: "hidden",
-    imageRendering: "pixelated",
-    boxShadow: "0 0 5px rgba(162, 192, 210, 0.3)",
-  }}
->
-  <Line data={data} options={options} />
+      className="crt"
+      style={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "#061326",
+        color: "#A2C0D2",
+        fontFamily: "'Manifold', sans-serif",
+        textShadow: "0 0 3px #A2C0D2",
+        overflow: "hidden",
+        imageRendering: "pixelated",
+        boxShadow: "0 0 5px rgba(162, 192, 210, 0.3)",
+      }}
+    >
+      <Line data={data} options={options} />
 
-  {/* Scanlines */}
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      pointerEvents: "none",
-      background: `repeating-linear-gradient(
-        rgba(255, 255, 255, 0.04) 0px,
-        rgba(255, 255, 255, 0.04) 1px,
-        transparent 1px,
-        transparent 4px
-      )`,
-      animation: "scanline 2s linear infinite",
-    }}
-  />
+      {/* Radial Vignette */}
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          background: "radial-gradient(circle, transparent 85%, #061326 100%)",
+          mixBlendMode: "multiply",
+        }}
+      />
 
-  {/* Pixelation Overlay */}
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      pointerEvents: "none",
-      zIndex: 1, // Ensure it's above scanlines
-      background: `
-        linear-gradient(to right, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.08) 1px, transparent 1px)
-      `,
-      backgroundSize: "8px 8px", // Pixel size
-      opacity: 0.2, // Adjust pixel visibility
-      mixBlendMode: "overlay",
-    }}
-  />
+      {/* Inject both scanline + CRT effect CSS */}
+      <style>{`
+        @keyframes scanline {
+          0% { transform: translateY(0); }
+          100% { transform: translateY(3px); }
+        }
 
-  {/* Radial Vignette */}
-  <div
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      pointerEvents: "none",
-      background: "radial-gradient(circle, transparent 85%, #061326 100%)",
-      mixBlendMode: "multiply",
-    }}
-  />
+        /* CRT Effect */
+        .crt::before {
+          content: "";
+          display: block;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          z-index: 2;
+          pointer-events: none;
+          background:
+            linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+            linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+          background-size: 100% 3px, 4px 100%;
+        }
 
-  <style>{`
-    @keyframes scanline {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(3px); } /* Speed up the movement slightly */
-    }
-  `}</style>
-</div>
+        @keyframes flicker {
+          0%  { opacity: 0.27861; }
+          5%  { opacity: 0.34769; }
+          10% { opacity: 0.23604; }
+          15% { opacity: 0.10626; }
+          20% { opacity: 0.18128; }
+          25% { opacity: 0.10626; }
+          30% { opacity: 0.18128; }
+          35% { opacity: 0.23604; }
+        }
 
+        .crt::after {
+          content: "";
+          display: block;
+          position: fixed;
+          top: 0; left: 0; right: 0; bottom: 0;
+          z-index: 2;
+          pointer-events: none;
+          background: rgba(18, 16, 16, 0.1);
+          opacity: 0;
+          animation: flicker 0.15s infinite;
+        }
+      `}</style>
+    </div>
   );
 };
 
