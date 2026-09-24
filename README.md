@@ -26,11 +26,9 @@ This project is an updated version of the [previous graphing calculator project]
 - A more interactive and modern UI with improved graphing capabilities.
 - Chart.js integration for responsive and high-quality graph rendering.
 
-## Future Plans
+## Status
 
-- **Multithreading**: Use Web Workers to enable multithreaded point generation for smoother performance with higher point counts.
-- **Multiple Equations**: Add support for graphing multiple equations simultaneously.
-- **Enhanced Graphing Options**: Include features like customizable graph styles, annotations, and overlays.
+Complete. This project is finished and no longer in active development. The live demo at [calculator.elannash.com](https://calculator.elannash.com) stays up.
 
 ## How to Use
 
@@ -42,10 +40,10 @@ This project is an updated version of the [previous graphing calculator project]
 
 1. **WebAssembly Integration**: The backend, written in **C++**, was compiled to **WebAssembly** using **Emscripten** for high-performance computation in the browser.
 2. **Graph Rendering**: Chart.js enabled smooth graph rendering, but optimizations are needed for handling larger datasets.
-3. **Single-threaded Constraints**: While the current version computes points sequentially, future updates will implement Web Workers for parallel processing.
+3. **Single-threaded Constraints**: Points are computed sequentially on one thread, which is why each graph is limited to 500 points.
 
 ## Contribution
 
-This project is open-source, and contributions are welcome! Submit issues, feature requests, or pull requests via the [GitHub repository](https://github.com/elannash/graphing-calculator-web-demo).
+The code is open source and available for reference. The project is no longer maintained, so issues and pull requests may not receive a response.
 
 ---
